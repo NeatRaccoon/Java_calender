@@ -1,8 +1,8 @@
 package Racoon_Calender;
 
 public class Calender {
-	private static int[] Max_Days = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30 ,31};
-	private static int[] Leap_Max_Days = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30 ,31};
+	private static int[] Max_Days = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30 ,31};
+	private static int[] Leap_Max_Days = {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30 ,31};
 	
 	public boolean isLeapyear(int year) {
 		if(year%4 == 0 && (year%100 != 0 || year%400 == 0)) {
@@ -14,18 +14,20 @@ public class Calender {
 	
 	public int MaxdaysofMonth(int year, int month) {
 		if(isLeapyear(year)) {
-			return Leap_Max_Days[month - 1];
+			return Leap_Max_Days[month];
 		}else {
-		return Max_Days[month - 1];
+		return Max_Days[month];
 	}
 	}
 	
 	
-	public void printCalender(int year, int month, int weekday) {
-		System.out.printf("   <<%4d년%3d월>>\n", year, month);
+	public void printCalender(int year, int month) {
+		System.out.printf("   <<%d년 %d월>>\n", year, month);
 		System.out.println(" SU MO TU WE TH FR SA");
 		System.out.println("---------------------");
 		
+		//get weekday automatically
+		int weekday = getWeekday(year, month, 1);
 		//print blank space
 		for(int i = 0; i < weekday; i++) {
 			System.out.print("   ");
@@ -62,6 +64,30 @@ public class Calender {
 //		System.out.println(" 8  9 10 11 12 13 14");
 //		System.out.println("15 16 17 18 19 20 21");
 //		System.out.println("22 23 24 25 26 27 28");
+	}
+	
+	private int getWeekday(int year, int month, int day) {
+		int syear = 1970;
+		
+		final int STANDARD_WEEKDAY = 3; //1970.Jan.1st = Thursday
+		
+		int count = 0;
+		
+		for(int i = syear; i < year; i++) {
+			int delta = isLeapyear(i) ? 366 : 365;
+			count += delta;
+		}
+		
+		for(int i = 1; i < month; i++) {
+			int delta = MaxdaysofMonth(year, i);
+			count += delta;
+		}
+		
+		count += day;
+				
+		int weekday = (count + STANDARD_WEEKDAY) % 7;
+		
+		return weekday;
 	}
 	
 	
