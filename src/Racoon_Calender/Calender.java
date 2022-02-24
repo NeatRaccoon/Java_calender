@@ -1,8 +1,31 @@
 package Racoon_Calender;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+
 public class Calender {
 	private static int[] Max_Days = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30 ,31};
 	private static int[] Leap_Max_Days = {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30 ,31};
+	
+	
+	private HashMap <Date, String> planMap;
+	
+	public Calender() {
+		planMap = new HashMap<Date, String>();
+	}
+	
+	public void registerPlan(String strDate, String plan) throws ParseException {
+		Date date = new SimpleDateFormat("yyyy-MM-dd").parse(strDate);
+		planMap.put(date, plan);
+	}
+	
+	public String searchplan(String strDate) throws ParseException {
+		Date date = new SimpleDateFormat("yyyy-MM-dd").parse(strDate);
+		String plan = planMap.get(date);
+		return plan;
+	}
 	
 	public boolean isLeapyear(int year) {
 		if(year%4 == 0 && (year%100 != 0 || year%400 == 0)) {
@@ -69,7 +92,7 @@ public class Calender {
 	private int getWeekday(int year, int month, int day) {
 		int syear = 1970;
 		
-		final int STANDARD_WEEKDAY = 3; //1970.Jan.1st = Thursday
+		final int STANDARD_WEEKDAY = 4; //1970.Jan.1st = Thursday
 		
 		int count = 0;
 		
@@ -83,7 +106,7 @@ public class Calender {
 			count += delta;
 		}
 		
-		count += day;
+		count += day - 1;
 				
 		int weekday = (count + STANDARD_WEEKDAY) % 7;
 		
